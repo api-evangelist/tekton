@@ -1,9 +1,9 @@
 aid: tekton
 url: https://raw.githubusercontent.com/api-evangelist/tekton/refs/heads/main/apis.yml
 name: Tekton
-x-type: company
+x-type: opensource
 description: >-
-  Tekton is a cloud-native CI/CD framework that runs as Kubernetes CRDs. The Tekton Pipelines API exposes Tasks, Pipelines, PipelineRuns, TaskRuns, and Triggers for building portable CI/CD workflows.
+  Tekton is a cloud-native CI/CD framework implemented as a set of Kubernetes Custom Resource Definitions and controllers under the tekton.dev API group. Tekton is a CNCF Incubating project. Its primary API surface is Kubernetes-native — Tasks, Pipelines, PipelineRuns, TaskRuns, EventListeners, Triggers, etc. — accessed through the Kubernetes API server (kubectl, client-go, the tkn CLI, and the Tekton Dashboard). Tekton itself is open-source under Apache 2.0; commercial offerings layered on Tekton (Red Hat OpenShift Pipelines, Jenkins X, Google Cloud Build private preview integrations, IBM Cloud Continuous Delivery, Pipelines-as-Code on GitOps platforms) are out of scope of the upstream project.
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
   - DevOps
@@ -11,13 +11,312 @@ tags:
   - Kubernetes
   - CNCF
   - Pipelines
+  - Open Source
+  - CRD
+  - Operator
 created: '2026-05-08'
 modified: '2026-05-08'
 specificationVersion: '0.19'
-apis: []
+apis:
+  - aid: tekton:tekton-task-crd
+    name: Tekton Task CRD
+    tags:
+      - CRD
+      - Tasks
+      - Steps
+      - Build
+    properties:
+      - url: https://tekton.dev/docs/pipelines/tasks/
+        type: Documentation
+      - url: https://github.com/tektoncd/pipeline/blob/main/config/300-task.yaml
+        type: Source
+    description: >-
+      tekton.dev/v1 kind=Task — defines a series of steps that launch specific build or delivery tools, ingest specific inputs (params, workspaces, resources), and produce specific outputs (results). Tasks are the reusable unit of execution in Tekton.
+  - aid: tekton:tekton-taskrun-crd
+    name: Tekton TaskRun CRD
+    tags:
+      - CRD
+      - TaskRuns
+      - Execution
+    properties:
+      - url: https://tekton.dev/docs/pipelines/taskruns/
+        type: Documentation
+    description: >-
+      tekton.dev/v1 kind=TaskRun — instantiates a Task with specific inputs, workspace bindings, and execution parameters. The TaskRun controller runs the steps as Kubernetes pods and surfaces status, logs, and results.
+  - aid: tekton:tekton-pipeline-crd
+    name: Tekton Pipeline CRD
+    tags:
+      - CRD
+      - Pipelines
+      - Workflows
+    properties:
+      - url: https://tekton.dev/docs/pipelines/pipelines/
+        type: Documentation
+      - url: https://github.com/tektoncd/pipeline/blob/main/config/300-pipeline.yaml
+        type: Source
+    description: >-
+      tekton.dev/v1 kind=Pipeline — defines an ordered/parallelized series of Tasks that accomplish a specific build or delivery goal. Pipelines compose Tasks via params, workspaces, results, and finally tasks.
+  - aid: tekton:tekton-pipelinerun-crd
+    name: Tekton PipelineRun CRD
+    tags:
+      - CRD
+      - PipelineRuns
+      - Execution
+    properties:
+      - url: https://tekton.dev/docs/pipelines/pipelineruns/
+        type: Documentation
+    description: >-
+      tekton.dev/v1 kind=PipelineRun — instantiates a Pipeline with specific param values, workspace bindings, service accounts, and timeouts. The PipelineRun controller orchestrates the underlying TaskRuns.
+  - aid: tekton:tekton-clustertask-crd
+    name: Tekton ClusterTask CRD
+    tags:
+      - CRD
+      - ClusterTasks
+      - Cluster-Scoped
+    properties:
+      - url: https://tekton.dev/docs/pipelines/tasks/#tekton-clustertasks
+        type: Documentation
+    description: >-
+      tekton.dev/v1beta1 kind=ClusterTask — cluster-scoped variant of Task, allowing a single definition to be referenced from any namespace. Marked deprecated in favor of remote resolution but still widely used.
+  - aid: tekton:tekton-stepaction-crd
+    name: Tekton StepAction CRD
+    tags:
+      - CRD
+      - StepActions
+      - Reusable
+    properties:
+      - url: https://tekton.dev/docs/pipelines/stepactions/
+        type: Documentation
+    description: >-
+      tekton.dev/v1beta1 kind=StepAction — reusable, parameterizable step definition that can be referenced from multiple Tasks, enabling tighter sharing than copy-pasting step blocks.
+  - aid: tekton:tekton-customrun-crd
+    name: Tekton CustomRun CRD
+    tags:
+      - CRD
+      - CustomRun
+      - Extension
+    properties:
+      - url: https://tekton.dev/docs/pipelines/customruns/
+        type: Documentation
+    description: >-
+      tekton.dev/v1beta1 kind=CustomRun — generic execution resource that custom controllers reconcile, enabling third-party orchestrators to extend Tekton with non-Pod-based execution semantics.
+  - aid: tekton:tekton-resolver-api
+    name: Tekton Resolver Framework
+    tags:
+      - Resolution
+      - Resolvers
+      - Remote
+    properties:
+      - url: https://tekton.dev/docs/pipelines/resolution/
+        type: Documentation
+      - url: https://github.com/tektoncd/pipeline/tree/main/pkg/resolution
+        type: Source
+    description: >-
+      The Tekton Resolution API (tekton.dev/v1alpha1 kind=ResolutionRequest) and built-in resolvers (Git, Hub, Bundles, Cluster, HTTP) fetch Tasks and Pipelines from remote sources at run time, so PipelineRuns can reference versioned remote definitions without bundling them in-cluster.
+  - aid: tekton:tekton-eventlistener-crd
+    name: Tekton EventListener CRD
+    tags:
+      - CRD
+      - EventListener
+      - Triggers
+      - Webhooks
+    properties:
+      - url: https://tekton.dev/docs/triggers/eventlisteners/
+        type: Documentation
+      - url: https://github.com/tektoncd/triggers
+        type: Source
+    description: >-
+      triggers.tekton.dev/v1beta1 kind=EventListener — runs an HTTP server (Sink) that receives webhooks (e.g., GitHub push events), applies interceptors, and creates Pipeline/TaskRun objects via TriggerTemplates.
+  - aid: tekton:tekton-trigger-crd
+    name: Tekton Trigger CRD
+    tags:
+      - CRD
+      - Trigger
+      - TriggerBinding
+      - TriggerTemplate
+    properties:
+      - url: https://tekton.dev/docs/triggers/triggers/
+        type: Documentation
+    description: >-
+      triggers.tekton.dev/v1beta1 kind=Trigger — combines TriggerBindings (extracting fields from incoming events) and a TriggerTemplate (instantiating PipelineRuns/TaskRuns) used by EventListeners.
+  - aid: tekton:tekton-triggerbinding-crd
+    name: Tekton TriggerBinding CRD
+    tags:
+      - CRD
+      - TriggerBinding
+    properties:
+      - url: https://tekton.dev/docs/triggers/triggerbindings/
+        type: Documentation
+    description: >-
+      triggers.tekton.dev/v1beta1 kind=TriggerBinding (and ClusterTriggerBinding) — extracts fields from event payloads and binds them to params used by TriggerTemplates.
+  - aid: tekton:tekton-triggertemplate-crd
+    name: Tekton TriggerTemplate CRD
+    tags:
+      - CRD
+      - TriggerTemplate
+    properties:
+      - url: https://tekton.dev/docs/triggers/triggertemplates/
+        type: Documentation
+    description: >-
+      triggers.tekton.dev/v1beta1 kind=TriggerTemplate — declares the PipelineRun/TaskRun resources that should be instantiated when a matching event is received, parameterized by TriggerBindings.
+  - aid: tekton:tekton-clusterinterceptor-crd
+    name: Tekton ClusterInterceptor CRD
+    tags:
+      - CRD
+      - Interceptor
+      - Filtering
+    properties:
+      - url: https://tekton.dev/docs/triggers/clusterinterceptors/
+        type: Documentation
+    description: >-
+      triggers.tekton.dev/v1alpha1 kind=ClusterInterceptor (and namespace-scoped Interceptor) — pluggable webhook handler that filters, validates, and mutates incoming events before they reach a TriggerTemplate (built-in interceptors include GitHub, GitLab, Bitbucket, CEL).
+  - aid: tekton:tekton-results-api
+    name: Tekton Results API
+    tags:
+      - Results
+      - History
+      - Storage
+      - GRPC
+    properties:
+      - url: https://tekton.dev/docs/results/
+        type: Documentation
+      - url: https://github.com/tektoncd/results
+        type: Source
+    description: >-
+      Tekton Results provides a long-term store and a gRPC + REST API for completed PipelineRun/TaskRun records and their logs, freeing the Kubernetes etcd from acting as a CI history database.
+  - aid: tekton:tekton-chains-api
+    name: Tekton Chains
+    tags:
+      - Supply Chain
+      - Provenance
+      - SLSA
+      - Signing
+    properties:
+      - url: https://tekton.dev/docs/chains/
+        type: Documentation
+      - url: https://github.com/tektoncd/chains
+        type: Source
+    description: >-
+      Tekton Chains observes completed TaskRuns/PipelineRuns and emits signed in-toto/SLSA provenance attestations to OCI registries, transparency logs (Rekor), or storage backends — supplying the supply-chain integrity surface for Tekton CI/CD.
+  - aid: tekton:tekton-pipelines-as-code
+    name: Tekton Pipelines as Code
+    tags:
+      - Pipelines as Code
+      - GitOps
+      - GitHub
+      - GitLab
+    properties:
+      - url: https://tekton.dev/docs/pipelinesascode/
+        type: Documentation
+      - url: https://github.com/openshift-pipelines/pipelines-as-code
+        type: Source
+    description: >-
+      Pipelines as Code lets you store Tekton Pipeline definitions inside the same Git repository as your application code (.tekton/) and runs them on PR/push events from GitHub/GitLab/Bitbucket/Gitea, providing a Git-native CI/CD experience.
+  - aid: tekton:tekton-dashboard-api
+    name: Tekton Dashboard API
+    tags:
+      - Dashboard
+      - UI
+      - Backend
+    properties:
+      - url: https://tekton.dev/docs/dashboard/
+        type: Documentation
+      - url: https://github.com/tektoncd/dashboard
+        type: Source
+    description: >-
+      The Tekton Dashboard exposes a web UI and a thin proxy/HTTP API over the Tekton CRDs and Tekton Results, providing browsing, log streaming, and run management capabilities.
+  - aid: tekton:tekton-cli-tkn
+    name: Tekton CLI (tkn)
+    tags:
+      - CLI
+      - tkn
+      - Operations
+    properties:
+      - url: https://tekton.dev/docs/cli/
+        type: Documentation
+      - url: https://github.com/tektoncd/cli
+        type: Source
+    description: >-
+      tkn is the official Tekton command-line tool wrapping the Kubernetes API for Tekton resources — start runs, stream logs, list/describe Tasks and Pipelines, manage triggers, and bootstrap projects.
+  - aid: tekton:tekton-operator-crd
+    name: Tekton Operator CRDs
+    tags:
+      - CRD
+      - Operator
+      - Lifecycle
+      - TektonConfig
+    properties:
+      - url: https://github.com/tektoncd/operator
+        type: Source
+    description: >-
+      operator.tekton.dev kinds (TektonConfig, TektonPipeline, TektonTrigger, TektonChain, TektonHub, TektonAddon, TektonDashboard, TektonResult) — the Tekton Operator installs and lifecycle-manages all Tekton subprojects on a cluster.
+  - aid: tekton:tekton-hub-api
+    name: Tekton Hub API
+    tags:
+      - Hub
+      - Catalog
+      - Discovery
+    properties:
+      - url: https://hub.tekton.dev/
+        type: Documentation
+      - url: https://github.com/tektoncd/hub
+        type: Source
+    description: >-
+      Tekton Hub is a public catalog of reusable Tasks and Pipelines exposed via REST API — search, fetch, and resolve community-published resources for use via the Hub resolver.
+  - aid: tekton:tekton-catalog-api
+    name: Tekton Catalog
+    tags:
+      - Catalog
+      - Library
+      - Reusable
+    properties:
+      - url: https://github.com/tektoncd/catalog
+        type: Source
+    description: >-
+      The Tekton Catalog hosts community-curated, versioned Task and Pipeline definitions consumed via the Hub or directly by the Git resolver.
 common:
   - type: Website
     url: https://tekton.dev/
+  - type: Documentation
+    url: https://tekton.dev/docs/
+  - type: Getting Started
+    url: https://tekton.dev/docs/getting-started/
+  - type: GitHub Organization
+    url: https://github.com/tektoncd
+  - type: Source
+    url: https://github.com/tektoncd/pipeline
+  - type: Triggers
+    url: https://github.com/tektoncd/triggers
+  - type: Chains
+    url: https://github.com/tektoncd/chains
+  - type: Results
+    url: https://github.com/tektoncd/results
+  - type: Operator
+    url: https://github.com/tektoncd/operator
+  - type: CLI
+    url: https://github.com/tektoncd/cli
+  - type: Dashboard
+    url: https://github.com/tektoncd/dashboard
+  - type: Catalog
+    url: https://github.com/tektoncd/catalog
+  - type: Hub
+    url: https://hub.tekton.dev/
+  - type: License
+    url: https://github.com/tektoncd/pipeline/blob/main/LICENSE
+  - type: CNCF Project
+    url: https://www.cncf.io/projects/tekton/
+  - type: Slack Community
+    url: https://tektoncd.slack.com/
+  - type: Blog
+    url: https://tekton.dev/blog/
+  - type: X (Twitter)
+    url: https://x.com/tektoncd
+  - type: YouTube
+    url: https://www.youtube.com/c/TektonCD
+  - type: Releases
+    url: https://github.com/tektoncd/pipeline/releases
+  - type: Roadmap
+    url: https://github.com/tektoncd/pipeline/blob/main/roadmap.md
   - type: Plans
     url: plans/tekton-plans-pricing.yml
   - type: RateLimits

@@ -5,32 +5,74 @@ provider: Tekton
 providerId: tekton
 created: '2026-05-08'
 modified: '2026-05-08'
-reconciled: false
+reconciled: true
 tags:
-- DevOps
-- CI/CD
-- Kubernetes
-- CNCF
-- Pipelines
-- Rate Limiting
-- Quotas
-- Throttling
-description: Placeholder rate-limit artifact for Tekton. Replace with real limits once the pipeline
-  researches the provider's rate-limit documentation.
-notes: Initial scaffold — limits have not yet been reconciled against the provider's documentation.
+  - DevOps
+  - CI/CD
+  - Kubernetes
+  - Open Source
+  - Rate Limiting
+description: >-
+  Tekton itself does not enforce HTTP rate limits — its primary API is the Kubernetes API server, which applies its own request-rate limits (max-requests-inflight, max-mutating-requests-inflight, APF — API Priority and Fairness). Tekton controllers expose tunable knobs for concurrent reconciles, throttling outbound calls to the Kubernetes API, and the EventListener Sink. Tekton Triggers EventListeners are protected only by their own ingress / reverse-proxy configuration. Operators are responsible for placing rate limits at the cluster ingress, the EventListener service, and the Tekton Hub front-end if exposed publicly.
+notes: >-
+  Tune client-go QPS and Burst on Tekton controllers (-kube-api-qps, -kube-api-burst) to match the underlying Kubernetes API server's APF policies. EventListeners should be fronted by an ingress with rate limits sized to the expected webhook fan-in.
 sources:
-- https://tekton.dev/
+  - https://tekton.dev/docs/pipelines/install/
+  - https://tekton.dev/docs/triggers/eventlisteners/
+  - https://kubernetes.io/docs/concepts/cluster-administration/flow-control/
 responseCodes:
-  throttled: 429
+  unauthenticated: 401
+  forbidden: 403
+  tooManyRequests: 429
 limits:
-- name: Default
-  scope: account
-  metric: varies
-  limit: see provider documentation
-  notes: Pending reconciliation.
+  - name: Controller QPS to Kubernetes API
+    scope: tekton-controller
+    metric: kube-api-requests-per-second
+    limit: 50
+    timeFrame: second
+    notes: >-
+      Default client-go QPS on the Tekton Pipelines controller; tunable via the kube-api-qps / kube-api-burst flags. Increase on large clusters with many concurrent runs.
+  - name: Controller Burst to Kubernetes API
+    scope: tekton-controller
+    metric: kube-api-burst
+    limit: 50
+    timeFrame: burst
+    notes: >-
+      Default client-go burst on the Tekton Pipelines controller; tunable via the same flags as above.
+  - name: Concurrent PipelineRuns
+    scope: namespace
+    metric: pipelineruns
+    limit: -1
+    timeFrame: simultaneous
+    notes: >-
+      No built-in cap. Operators typically use Kubernetes ResourceQuotas (requests.cpu, pods, count/pipelineruns.tekton.dev) to bound concurrency per namespace.
+  - name: EventListener Throughput
+    scope: eventlistener
+    metric: webhooks-per-second
+    limit: -1
+    timeFrame: second
+    notes: >-
+      Sized by the EventListener Sink replica count and the underlying ingress / load balancer. No application-level rate limit; place IP- or token-level limits at ingress.
+  - name: API Priority and Fairness
+    scope: kubernetes-api-server
+    metric: requests-per-priority-level
+    limit: -1
+    timeFrame: simultaneous
+    notes: >-
+      Kubernetes APF assigns Tekton controller traffic to a flow-schema; tune APF to give Tekton appropriate share of in-flight slots in busy clusters.
 policies:
-- name: Backoff Strategy
-  description: Clients should implement exponential backoff with jitter and honor any Retry-After header.
+  - name: Operator-Imposed Rate Limiting
+    description: >-
+      Place an ingress / API gateway in front of Tekton Triggers EventListeners and the Tekton Dashboard, applying per-source-IP and per-token rate limits suitable for your tenancy.
+  - name: APF Tuning
+    description: >-
+      For large clusters, configure Kubernetes API Priority and Fairness flow-schemas to allocate sufficient concurrency to the Tekton Pipelines controller (system service-account targeting tekton-pipelines namespace).
+  - name: Resource Quotas
+    description: >-
+      Apply ResourceQuotas and LimitRanges per namespace to bound concurrent PipelineRuns and the resources they consume.
+  - name: Hub Public Surface
+    description: >-
+      The public Tekton Hub at hub.tekton.dev is governed by its hosting provider; rate limits are not contractually published.
 maintainers:
-- FN: Kin Lane
-  email: kin@apievangelist.com
+  - FN: Kin Lane
+    email: kin@apievangelist.com

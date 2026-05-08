@@ -7,61 +7,70 @@ created: '2026-05-08'
 modified: '2026-05-08'
 reconciled: false
 tags:
-- DevOps
-- CI/CD
-- Kubernetes
-- CNCF
-- Pipelines
-- FinOps
-- Cost Management
-- FOCUS
-description: FOCUS-aligned FinOps placeholder for Tekton. Pipeline will replace with the provider's
-  real billing-model details once researched.
-notes: Initial scaffold — billing model has not yet been reconciled.
+  - DevOps
+  - CI/CD
+  - Kubernetes
+  - CNCF
+  - Open Source
+  - FinOps
+  - Cost Management
+  - FOCUS
+description: >-
+  Tekton is open-source software (Apache License 2.0). There is no commercial billing surface published by the Tekton project itself — there are no invoices, no metered usage charges, and no subscription fees attributable to Tekton. Operating costs flow entirely through the operator's own Kubernetes infrastructure providers (worker-node compute consumed by TaskRun/PipelineRun pods, persistent volumes for workspaces, image-registry storage, ingress, observability, and any cloud-side OCI registries used by Chains). Commercial managed offerings exist (Red Hat OpenShift Pipelines, IBM Cloud Continuous Delivery, Tekton via various cloud platforms) and have their own billing surfaces that should be profiled against the third-party vendor — not Tekton.
+notes: >-
+  Open source — no commercial billing surface; commercial offerings handled by 3rd parties (Red Hat OpenShift Pipelines, IBM Cloud Continuous Delivery, Tekton via cloud platforms). reconciled=false explicitly indicates that no Tekton-issued bill exists rather than incomplete data. The principles below describe how to FinOps-manage the underlying infrastructure cost of operating self-hosted Tekton.
 sources:
-- https://tekton.dev/
-- https://focus.finops.org/focus-specification/v1-3/
+  - https://tekton.dev/
+  - https://github.com/tektoncd/pipeline/blob/main/LICENSE
+  - https://focus.finops.org/focus-specification/v1-3/
 alignedWith:
   framework: FinOps Foundation Framework
   frameworkUrl: https://www.finops.org/framework/
   dataSpec: FOCUS
   dataSpecVersion: '1.3'
   dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
-publisherName: Tekton
-serviceCategory: DevOps
+publisherName: Tekton (CNCF)
+serviceCategory: DevOps / CI/CD
 billingModel:
-  pricingCategory: To Be Reconciled
-  billingFrequency: Monthly
-  billingCurrency: USD
-  chargeCategories:
-  - Usage
-  - Purchase
-  - Adjustment
+  pricingCategory: Open Source — No Commercial Billing Surface
+  billingFrequency: Not Applicable
+  billingCurrency: Not Applicable
+  chargeCategories: []
 focusColumns:
   ServiceName: Tekton
   ServiceCategory: DevOps
-  ProviderName: Tekton
-  PublisherName: Tekton
-  InvoiceIssuerName: Tekton
-  BillingCurrency: USD
-  ChargeCategory: Usage
-meters:
-- name: api_usage
-  description: Catch-all meter pending reconciliation against the provider's published metering.
-  unit: varies
-  aggregation: sum
-  dimensions:
-  - account
-  - resource
+  ProviderName: Tekton (CNCF)
+  PublisherName: Tekton (CNCF)
+  InvoiceIssuerName: Not Applicable
+  BillingCurrency: Not Applicable
+  ChargeCategory: Not Applicable
+meters: []
 principles:
-- name: Visibility
-  description: Pull provider invoices or usage exports until a self-serve usage feed is documented.
-- name: Allocation
-  description: Tag invoice line items to consuming business units in your FinOps store.
-- name: Optimization
-  description: Levers depend on the provider's billing model; review at renewal once reconciled.
-- name: Accountability
-  description: Assign a contract owner to review billing against negotiated terms.
+  - name: Visibility
+    description: >-
+      No Tekton invoice exists. Treat self-hosted Tekton as a Kubernetes workload — the cost is the underlying compute consumed by TaskRun/PipelineRun pods (often bursty), persistent storage for workspaces, image pulls, OCI artifact pushes, ingress for EventListeners, and the database backing Tekton Results. All of these appear on the cloud provider's FOCUS-formatted bill.
+  - name: Allocation
+    description: >-
+      Tag PipelineRun and TaskRun pods by team / repository / commit-author via Tekton's labels and annotations and propagate them to your cloud-provider tagging strategy. Tekton Results storage costs can be allocated by namespace.
+  - name: Optimization
+    description: >-
+      Use spot/preemptible nodes for short-lived TaskRun pods; right-size step container resource requests; cache image layers via local registry mirrors; use the Hub/Bundles resolver to avoid re-bundling Tasks; expire old Results data; consolidate small Tekton installations onto a shared cluster with namespace-level RBAC and ResourceQuotas.
+  - name: Accountability
+    description: >-
+      Assign a platform-engineering owner; review monthly Kubernetes-cluster cost attributable to tekton-pipelines and PipelineRun namespaces; benchmark managed Tekton (e.g., OpenShift Pipelines) versus self-hosting before signing a vendor contract.
+commercialOfferings:
+  - name: Red Hat OpenShift Pipelines
+    type: distribution
+    url: https://www.redhat.com/en/technologies/cloud-computing/openshift/pipelines
+    note: Bundled and supported as part of OpenShift subscription.
+  - name: IBM Cloud Continuous Delivery
+    type: managed-service
+    url: https://www.ibm.com/cloud/continuous-delivery
+    note: Cloud-hosted CI/CD using Tekton; pricing per IBM Cloud catalog.
+  - name: Pipelines-as-Code on Cloud Platforms
+    type: managed-service
+    url: https://pipelinesascode.com/
+    note: Several cloud platforms expose hosted Tekton Pipelines-as-Code; pricing per platform.
 maintainers:
-- FN: Kin Lane
-  email: kin@apievangelist.com
+  - FN: Kin Lane
+    email: kin@apievangelist.com
