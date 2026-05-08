@@ -30,6 +30,8 @@ apis:
         type: Documentation
       - url: https://github.com/tektoncd/pipeline/blob/main/config/300-task.yaml
         type: Source
+      - url: openapi/tekton-pipeline-openapi.json
+        type: OpenAPI
     description: >-
       tekton.dev/v1 kind=Task — defines a series of steps that launch specific build or delivery tools, ingest specific inputs (params, workspaces, resources), and produce specific outputs (results). Tasks are the reusable unit of execution in Tekton.
   - aid: tekton:tekton-taskrun-crd
