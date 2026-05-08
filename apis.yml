@@ -1,0 +1,29 @@
+aid: tekton
+url: https://raw.githubusercontent.com/api-evangelist/tekton/refs/heads/main/apis.yml
+name: Tekton
+x-type: company
+description: >-
+  Tekton is a cloud-native CI/CD framework that runs as Kubernetes CRDs. The Tekton Pipelines API exposes Tasks, Pipelines, PipelineRuns, TaskRuns, and Triggers for building portable CI/CD workflows.
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - DevOps
+  - CI/CD
+  - Kubernetes
+  - CNCF
+  - Pipelines
+created: '2026-05-08'
+modified: '2026-05-08'
+specificationVersion: '0.19'
+apis: []
+common:
+  - type: Website
+    url: https://tekton.dev/
+  - type: Plans
+    url: plans/tekton-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/tekton-rate-limits.yml
+  - type: FinOps
+    url: finops/tekton-finops.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
