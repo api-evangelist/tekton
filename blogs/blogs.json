@@ -2,12 +2,20 @@
   "repo": "tekton",
   "feeds": [
     {
-      "source": "https://tekton.dev/blog/",
+      "source": "https://tekton.dev/blog/index.xml",
       "feed_url": "https://tekton.dev/blog/index.xml",
-      "title": "Tekton \u2013 Blog",
-      "saved": 0
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    },
+    {
+      "source": "https://tektoncd.slack.com/",
+      "feed_url": "https://tektoncd.slack.com/blog/rss/",
+      "title": "",
+      "saved": 2,
+      "method": "discovered"
     }
   ],
-  "fetched": "2026-05-17T20:20:35Z",
-  "post_count": 17
+  "fetched": "2026-06-01T23:35:02Z",
+  "post_count": 19
 }
