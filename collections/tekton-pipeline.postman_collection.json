@@ -1,0 +1,20 @@
+{
+  "item": [],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "934cabb3-b11f-47ee-847f-7443a1befe17",
+    "name": "Tekton",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Tekton Pipeline",
+      "type": "text/plain"
+    }
+  }
+}

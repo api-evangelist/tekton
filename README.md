@@ -1,18 +1,19 @@
 # Tekton (tekton)
 
-Tekton is a cloud-native CI/CD framework implemented as a set of Kubernetes Custom Resource Definitions and controllers under the tekton.dev API group. Tekton is a CNCF Incubating project, licensed under Apache 2.0.
+Tekton is a cloud-native CI/CD framework implemented as a set of Kubernetes Custom Resource Definitions and controllers under the tekton.dev API group. Tekton is a CNCF Incubating project. Its primary API surface is Kubernetes-native — Tasks, Pipelines, PipelineRuns, TaskRuns, EventListeners, Triggers, etc. — accessed through the Kubernetes API server (kubectl, client-go, the tkn CLI, and the Tekton Dashboard). Tekton itself is open-source under Apache 2.0; commercial offerings layered on Tekton (Red Hat OpenShift Pipelines, Jenkins X, Google Cloud Build private preview integrations, IBM Cloud Continuous Delivery, Pipelines-as-Code on GitOps platforms) are out of scope of the upstream project.
 
-**URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/tekton/refs/heads/main/apis.yml)
-
-**Run:** [Capabilities Using Naftiko](https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=tekton-api-evangelist&utm_content=repo)
-
-## Type
-
-- **x-type:** opensource (CNCF Incubating, Apache License 2.0)
+**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/tekton/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/tekton/refs/heads/main/apis.yml)
 
 ## Tags
 
- - DevOps, CI/CD, Kubernetes, CNCF, Pipelines, Open Source, CRD, Operator
+- DevOps
+- CI/CD
+- Kubernetes
+- CNCF
+- Pipelines
+- Open Source
+- CRD
+- Operator
 
 ## Timestamps
 
@@ -21,66 +22,386 @@ Tekton is a cloud-native CI/CD framework implemented as a set of Kubernetes Cust
 
 ## APIs
 
-| API | Description |
-|---|---|
-| Tekton Task CRD | tekton.dev/v1 kind=Task |
-| Tekton TaskRun CRD | tekton.dev/v1 kind=TaskRun |
-| Tekton Pipeline CRD | tekton.dev/v1 kind=Pipeline |
-| Tekton PipelineRun CRD | tekton.dev/v1 kind=PipelineRun |
-| Tekton ClusterTask CRD | cluster-scoped Task (deprecated for resolvers) |
-| Tekton StepAction CRD | reusable parameterizable step |
-| Tekton CustomRun CRD | extension point for custom controllers |
-| Tekton Resolver Framework | Git/Hub/Bundles/Cluster/HTTP remote resolution |
-| Tekton EventListener CRD | webhook sink for Triggers |
-| Tekton Trigger CRD | binding + template + interceptors |
-| Tekton TriggerBinding CRD | extracts fields from event payloads |
-| Tekton TriggerTemplate CRD | declares run resources |
-| Tekton ClusterInterceptor CRD | pluggable webhook handlers |
-| Tekton Results API | gRPC + REST history store for runs and logs |
-| Tekton Chains | signed in-toto / SLSA provenance |
-| Tekton Pipelines as Code | Git-native CI/CD on PR/push |
-| Tekton Dashboard API | thin proxy/HTTP API for the UI |
-| Tekton CLI (tkn) | official command-line tool |
-| Tekton Operator CRDs | TektonConfig, TektonPipeline, etc. |
-| Tekton Hub API | catalog of reusable Tasks and Pipelines |
-| Tekton Catalog | curated community Tasks and Pipelines |
+### Tekton Task CRD
+
+tekton.dev/v1 kind=Task — defines a series of steps that launch specific build or delivery tools, ingest specific inputs (params, workspaces, resources), and produce specific outputs (results). Tasks are the reusable unit of execution in Tekton.
+
+#### Tags
+
+- CRD
+- Tasks
+- Steps
+- Build
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/pipelines/tasks/)
+- [Source](https://github.com/tektoncd/pipeline/blob/main/config/300-task.yaml)
+- [OpenAPI](openapi/tekton-pipeline-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton TaskRun CRD
+
+tekton.dev/v1 kind=TaskRun — instantiates a Task with specific inputs, workspace bindings, and execution parameters. The TaskRun controller runs the steps as Kubernetes pods and surfaces status, logs, and results.
+
+#### Tags
+
+- CRD
+- TaskRuns
+- Execution
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/pipelines/taskruns/)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton Pipeline CRD
+
+tekton.dev/v1 kind=Pipeline — defines an ordered/parallelized series of Tasks that accomplish a specific build or delivery goal. Pipelines compose Tasks via params, workspaces, results, and finally tasks.
+
+#### Tags
+
+- CRD
+- Pipelines
+- Workflows
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/pipelines/pipelines/)
+- [Source](https://github.com/tektoncd/pipeline/blob/main/config/300-pipeline.yaml)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton PipelineRun CRD
+
+tekton.dev/v1 kind=PipelineRun — instantiates a Pipeline with specific param values, workspace bindings, service accounts, and timeouts. The PipelineRun controller orchestrates the underlying TaskRuns.
+
+#### Tags
+
+- CRD
+- PipelineRuns
+- Execution
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/pipelines/pipelineruns/)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton ClusterTask CRD
+
+tekton.dev/v1beta1 kind=ClusterTask — cluster-scoped variant of Task, allowing a single definition to be referenced from any namespace. Marked deprecated in favor of remote resolution but still widely used.
+
+#### Tags
+
+- CRD
+- ClusterTasks
+- Cluster-Scoped
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/pipelines/tasks/#tekton-clustertasks)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton StepAction CRD
+
+tekton.dev/v1beta1 kind=StepAction — reusable, parameterizable step definition that can be referenced from multiple Tasks, enabling tighter sharing than copy-pasting step blocks.
+
+#### Tags
+
+- CRD
+- StepActions
+- Reusable
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/pipelines/stepactions/)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton CustomRun CRD
+
+tekton.dev/v1beta1 kind=CustomRun — generic execution resource that custom controllers reconcile, enabling third-party orchestrators to extend Tekton with non-Pod-based execution semantics.
+
+#### Tags
+
+- CRD
+- CustomRun
+- Extension
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/pipelines/customruns/)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton Resolver Framework
+
+The Tekton Resolution API (tekton.dev/v1alpha1 kind=ResolutionRequest) and built-in resolvers (Git, Hub, Bundles, Cluster, HTTP) fetch Tasks and Pipelines from remote sources at run time, so PipelineRuns can reference versioned remote definitions without bundling them in-cluster.
+
+#### Tags
+
+- Resolution
+- Resolvers
+- Remote
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/pipelines/resolution/)
+- [Source](https://github.com/tektoncd/pipeline/tree/main/pkg/resolution)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton EventListener CRD
+
+triggers.tekton.dev/v1beta1 kind=EventListener — runs an HTTP server (Sink) that receives webhooks (e.g., GitHub push events), applies interceptors, and creates Pipeline/TaskRun objects via TriggerTemplates.
+
+#### Tags
+
+- CRD
+- EventListener
+- Triggers
+- Webhooks
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/triggers/eventlisteners/)
+- [Source](https://github.com/tektoncd/triggers)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton Trigger CRD
+
+triggers.tekton.dev/v1beta1 kind=Trigger — combines TriggerBindings (extracting fields from incoming events) and a TriggerTemplate (instantiating PipelineRuns/TaskRuns) used by EventListeners.
+
+#### Tags
+
+- CRD
+- Trigger
+- TriggerBinding
+- TriggerTemplate
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/triggers/triggers/)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton TriggerBinding CRD
+
+triggers.tekton.dev/v1beta1 kind=TriggerBinding (and ClusterTriggerBinding) — extracts fields from event payloads and binds them to params used by TriggerTemplates.
+
+#### Tags
+
+- CRD
+- TriggerBinding
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/triggers/triggerbindings/)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton TriggerTemplate CRD
+
+triggers.tekton.dev/v1beta1 kind=TriggerTemplate — declares the PipelineRun/TaskRun resources that should be instantiated when a matching event is received, parameterized by TriggerBindings.
+
+#### Tags
+
+- CRD
+- TriggerTemplate
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/triggers/triggertemplates/)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton ClusterInterceptor CRD
+
+triggers.tekton.dev/v1alpha1 kind=ClusterInterceptor (and namespace-scoped Interceptor) — pluggable webhook handler that filters, validates, and mutates incoming events before they reach a TriggerTemplate (built-in interceptors include GitHub, GitLab, Bitbucket, CEL).
+
+#### Tags
+
+- CRD
+- Interceptor
+- Filtering
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/triggers/clusterinterceptors/)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton Results API
+
+Tekton Results provides a long-term store and a gRPC + REST API for completed PipelineRun/TaskRun records and their logs, freeing the Kubernetes etcd from acting as a CI history database.
+
+#### Tags
+
+- Results
+- History
+- Storage
+- GRPC
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/results/)
+- [Source](https://github.com/tektoncd/results)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton Chains
+
+Tekton Chains observes completed TaskRuns/PipelineRuns and emits signed in-toto/SLSA provenance attestations to OCI registries, transparency logs (Rekor), or storage backends — supplying the supply-chain integrity surface for Tekton CI/CD.
+
+#### Tags
+
+- Supply Chain
+- Provenance
+- SLSA
+- Signing
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/chains/)
+- [Source](https://github.com/tektoncd/chains)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton Pipelines as Code
+
+Pipelines as Code lets you store Tekton Pipeline definitions inside the same Git repository as your application code (.tekton/) and runs them on PR/push events from GitHub/GitLab/Bitbucket/Gitea, providing a Git-native CI/CD experience.
+
+#### Tags
+
+- Pipelines as Code
+- GitOps
+- GitHub
+- GitLab
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/pipelinesascode/)
+- [Source](https://github.com/openshift-pipelines/pipelines-as-code)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton Dashboard API
+
+The Tekton Dashboard exposes a web UI and a thin proxy/HTTP API over the Tekton CRDs and Tekton Results, providing browsing, log streaming, and run management capabilities.
+
+#### Tags
+
+- Dashboard
+- UI
+- Backend
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/dashboard/)
+- [Source](https://github.com/tektoncd/dashboard)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton CLI (tkn)
+
+tkn is the official Tekton command-line tool wrapping the Kubernetes API for Tekton resources — start runs, stream logs, list/describe Tasks and Pipelines, manage triggers, and bootstrap projects.
+
+#### Tags
+
+- CLI
+- tkn
+- Operations
+
+#### Properties
+
+- [Documentation](https://tekton.dev/docs/cli/)
+- [Source](https://github.com/tektoncd/cli)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton Operator CRDs
+
+operator.tekton.dev kinds (TektonConfig, TektonPipeline, TektonTrigger, TektonChain, TektonHub, TektonAddon, TektonDashboard, TektonResult) — the Tekton Operator installs and lifecycle-manages all Tekton subprojects on a cluster.
+
+#### Tags
+
+- CRD
+- Operator
+- Lifecycle
+- TektonConfig
+
+#### Properties
+
+- [Source](https://github.com/tektoncd/operator)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton Hub API
+
+Tekton Hub is a public catalog of reusable Tasks and Pipelines exposed via REST API — search, fetch, and resolve community-published resources for use via the Hub resolver.
+
+#### Tags
+
+- Hub
+- Catalog
+- Discovery
+
+#### Properties
+
+- [Documentation](https://hub.tekton.dev/)
+- [Source](https://github.com/tektoncd/hub)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Tekton Catalog
+
+The Tekton Catalog hosts community-curated, versioned Task and Pipeline definitions consumed via the Hub or directly by the Git resolver.
+
+#### Tags
+
+- Catalog
+- Library
+- Reusable
+
+#### Properties
+
+- [Source](https://github.com/tektoncd/catalog)
+- [Postman Collection](collections/tekton-pipeline.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/tekton-pipeline.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
 
 ## Common Properties
 
 - [Website](https://tekton.dev/)
 - [Documentation](https://tekton.dev/docs/)
+- [Getting Started](https://tekton.dev/docs/getting-started/)
 - [GitHub Organization](https://github.com/tektoncd)
-- [Source (pipeline)](https://github.com/tektoncd/pipeline)
-- [License (Apache 2.0)](https://github.com/tektoncd/pipeline/blob/main/LICENSE)
-- [CNCF Project](https://www.cncf.io/projects/tekton/)
+- [Source](https://github.com/tektoncd/pipeline)
+- [Triggers](https://github.com/tektoncd/triggers)
+- [Chains](https://github.com/tektoncd/chains)
+- [Results](https://github.com/tektoncd/results)
+- [Operator](https://github.com/tektoncd/operator)
+- [C L I](https://github.com/tektoncd/cli)
+- [Dashboard](https://github.com/tektoncd/dashboard)
+- [Catalog](https://github.com/tektoncd/catalog)
 - [Hub](https://hub.tekton.dev/)
-- [Plans](plans/tekton-plans-pricing.yml) — API Commons Plans 0.1 (FOSS — no commercial billing)
-- [RateLimits](rate-limits/tekton-rate-limits.yml) — API Commons Rate Limits 0.1 (operator-tuned)
-- [FinOps](finops/tekton-finops.yml) — FOCUS-aligned (FOSS — no commercial billing)
-
-## Plans Summary
-
-- **Open Source (Apache 2.0)** — free, CNCF Incubating, all components included
-- **Third-Party Distributions** — Red Hat OpenShift Pipelines, IBM Cloud Continuous Delivery, Pipelines-as-Code on cloud platforms (out of scope of this profile)
-
-## Rate Limits Summary
-
-- **Controller QPS to Kubernetes API:** default 50 (tunable)
-- **Controller burst:** default 50 (tunable)
-- **Concurrent PipelineRuns:** unlimited; bound via Kubernetes ResourceQuotas
-- **EventListener throughput:** sized by Sink replicas + ingress
-- **Kubernetes API Priority and Fairness (APF)** governs cluster-side rate limiting
-
-## Artifacts
-
-| Artifact | Path |
-|---|---|
-| Plans | `plans/tekton-plans-pricing.yml` |
-| Rate Limits | `rate-limits/tekton-rate-limits.yml` |
-| FinOps | `finops/tekton-finops.yml` |
+- [License](https://github.com/tektoncd/pipeline/blob/main/LICENSE)
+- [C N C F  Project](https://www.cncf.io/projects/tekton/)
+- [Slack  Community](https://tektoncd.slack.com/)
+- [Blog](https://tekton.dev/blog/)
+- [X ( Twitter)](https://x.com/tektoncd)
+- [YouTube](https://www.youtube.com/c/TektonCD)
+- [Releases](https://github.com/tektoncd/pipeline/releases)
+- [Roadmap](https://github.com/tektoncd/pipeline/blob/main/roadmap.md)
+- [Plans](plans/tekton-plans-pricing.yml)
+- [Rate Limits](rate-limits/tekton-rate-limits.yml)
+- [Fin Ops](finops/tekton-finops.yml)
 
 ## Maintainers
 
 **FN:** Kin Lane
-
 **Email:** kin@apievangelist.com
