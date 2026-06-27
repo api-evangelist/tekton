@@ -315,7 +315,7 @@ common:
     url: https://x.com/tektoncd
   - type: YouTube
     url: https://www.youtube.com/c/TektonCD
-  - type: Releases
+  - type: ReleaseNotes
     url: https://github.com/tektoncd/pipeline/releases
   - type: RoadMap
     url: https://github.com/tektoncd/pipeline/blob/main/roadmap.md
