@@ -277,6 +277,8 @@ apis:
     description: >-
       The Tekton Catalog hosts community-curated, versioned Task and Pipeline definitions consumed via the Hub or directly by the Git resolver.
 common:
+  - type: DomainSecurity
+    url: security/tekton-domain-security.yml
   - type: Website
     url: https://tekton.dev/
   - type: Documentation
