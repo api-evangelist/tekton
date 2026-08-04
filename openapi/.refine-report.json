@@ -1,0 +1,14 @@
+{
+  "provider": "tekton",
+  "sources": [
+    "tekton-pipeline-openapi.json"
+  ],
+  "outputs": [],
+  "archived": [
+    "archived tekton-pipeline-openapi.json"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
