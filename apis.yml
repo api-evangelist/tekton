@@ -23,6 +23,15 @@ tags:
   - Kubernetes
   - CNCF
   - Pipelines
+  - Open-Source
+  - CRD
+  - Operator
+tags_raw:
+  - DevOps
+  - CI/CD
+  - Kubernetes
+  - CNCF
+  - Pipelines
   - Open Source
   - CRD
   - Operator
@@ -33,6 +42,11 @@ apis:
   - aid: tekton:tekton-task-crd
     name: Tekton Task CRD
     tags:
+      - CRD
+      - Task
+      - Steps
+      - Builds
+    tags_raw:
       - CRD
       - Tasks
       - Steps
@@ -49,6 +63,10 @@ apis:
   - aid: tekton:tekton-taskrun-crd
     name: Tekton TaskRun CRD
     tags:
+      - CRD
+      - Task Runs
+      - Execution
+    tags_raw:
       - CRD
       - TaskRuns
       - Execution
@@ -73,6 +91,10 @@ apis:
   - aid: tekton:tekton-pipelinerun-crd
     name: Tekton PipelineRun CRD
     tags:
+      - CRD
+      - Pipeline Runs
+      - Execution
+    tags_raw:
       - CRD
       - PipelineRuns
       - Execution
@@ -133,6 +155,11 @@ apis:
       - CRD
       - EventListener
       - Triggers
+      - Webhook
+    tags_raw:
+      - CRD
+      - EventListener
+      - Triggers
       - Webhooks
     properties:
       - url: https://tekton.dev/docs/triggers/eventlisteners/
@@ -190,6 +217,11 @@ apis:
       - Results
       - History
       - Storage
+      - gRPC
+    tags_raw:
+      - Results
+      - History
+      - Storage
       - GRPC
     properties:
       - url: https://tekton.dev/docs/results/
@@ -242,6 +274,9 @@ apis:
   - aid: tekton:tekton-cli-tkn
     name: Tekton CLI (tkn)
     tags:
+      - CLI
+      - tkn
+    tags_raw:
       - CLI
       - tkn
       - Operations
