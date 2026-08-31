@@ -75,7 +75,7 @@ apis:
     name: Tekton TaskRun CRD
     tags:
       - CRD
-      - Task Runs
+      - TaskRuns
       - Execution
     tags_raw:
       - CRD
@@ -103,7 +103,7 @@ apis:
     name: Tekton PipelineRun CRD
     tags:
       - CRD
-      - Pipeline Runs
+      - PipelineRuns
       - Execution
     tags_raw:
       - CRD
@@ -228,7 +228,7 @@ apis:
       - Results
       - History
       - Storage
-      - gRPC
+      - GRPC
     tags_raw:
       - Results
       - History
