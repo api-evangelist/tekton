@@ -272,6 +272,10 @@ apis:
   - aid: tekton:tekton-dashboard-api
     name: Tekton Dashboard API
     tags:
+      - Dashboards
+      - UI
+      - Backend
+    tags_raw:
       - Dashboard
       - UI
       - Backend
