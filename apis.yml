@@ -34,7 +34,7 @@ tags:
   - Kubernetes
   - CNCF
   - Pipelines
-  - Open-Source
+  - Open Source
   - CRD
   - Operator
 tags_raw:
@@ -46,6 +46,7 @@ tags_raw:
   - Open Source
   - CRD
   - Operator
+  - Open-Source
 created: '2026-05-08'
 modified: '2026-05-08'
 specificationVersion: '0.23'
