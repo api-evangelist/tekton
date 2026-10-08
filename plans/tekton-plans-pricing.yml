@@ -70,3 +70,28 @@ plans:
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - subscription
+  units:
+  - compute
+  plans:
+  - name: Open Source (Apache 2.0)
+    access: free
+    model: subscription
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - per-use
+  - name: Third-Party Distributions and Managed Offerings (Reference)
+    access: other
+    model: free
+    model_how: derived
+    units:
+    - other
+    periods:
+    - term
