@@ -72,3 +72,31 @@
     detected: '2026-10-15'
   status: not-a-workflow
   arazzo: null
+- slug: tekton-sigstore
+  label: Sigstore
+  partner_name: Sigstore
+  category: Artifact signing (Sigstore)
+  type: register
+  channel: standard-directory
+  evidence: https://openssf.landscape2.io/?category=sigstore
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: OpenSSF Landscape (github.com/ossf/ossf-landscape landscape.yml @0c50858516), Sigstore
+    standard: Sigstore
+    spec_file: null
+    role: sigstore-integration
+    registered_name: Tekton Chains
+    registered_names:
+    - Tekton Chains
+    website: https://tekton.dev
+    matched_domain: tekton.dev
+    matched_by: domain
+    landscape_subcategories:
+    - Integrations
+    signal_note: 'participation only: an Integrations / Language Clients / Projects entry means the supplier integrates
+      Sigstore signing; entries are context, never counted. ''Signed With'' users are held'
+    detected_by: sweep-software-supply-chain.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
